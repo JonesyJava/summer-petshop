@@ -29,19 +29,44 @@ export default class CatsController {
         catch (err) { next(err) } //sends error to default error handler (main.js)
     }
 
-    getCatById(req, res, next) {
+    // getAllCatsPromise(req, res, next) {
+    //     _repo.find({})
+    //         .then(cats => {
+    //             res.send(cats)
+    //         })
+    //         .catch(err => {
+    //             next(err)
+    //         })
+    // }
 
+    async getCatById(req, res, next) {
+        try {
+            let cat = await _repo.findById(req.params.id)
+            return res.send(cat)
+        } catch (error) { next(error) }
     }
 
-    createCat(req, res, next) {
-
+    async createCat(req, res, next) {
+        try {
+            let cat = await _repo.create(req.body)
+            return res.status(201).send(cat)
+        } catch (error) { next(error) }
     }
 
-    editCat(req, res, next) {
-
+    async editCat(req, res, next) {
+        try {
+            let cat = await _repo.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true })
+            if (cat) {
+                return res.send(cat)
+            }
+            throw new Error("invalid id")
+        } catch (error) { next(error) }
     }
 
-    deleteCat(req, res, next) {
-
+    async deleteCat(req, res, next) {
+        try {
+            let cat = await _repo.findByIdAndDelete(req.params.id)
+            return res.send("Successfully deleted")
+        } catch (error) { next(error) }
     }
 }

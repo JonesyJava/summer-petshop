@@ -1,6 +1,11 @@
 import express from 'express'
 import './db/dbconfig'
 let server = express()
+let bp = require('body-parser')
+
+server.use(bp.urlencoded({ extended: true }))
+server.use(bp.json())
+
 //everything above this line will ALWAYS stay
 
 
